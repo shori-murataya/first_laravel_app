@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>投稿一覧</title>
+        <title>投稿詳細</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -32,8 +32,8 @@
     </svg>
   </a>
   </header>
-<h2 style="margin:20px;">投稿一覧</h2>
-@foreach ($posts as $post)
+<h2 style="margin:20px;">投稿詳細</h2>
+
   <div class="jumbotron" style="color: black; width: 90%; margin: 30px auto;">
     <h1 class="display-5">{{ $post->title }}</h1>
     <hr class="my-4">
@@ -41,16 +41,32 @@
     <hr class="my-4">
     <p>投稿者 : {{ $post->user->name }}</p>
     <p>作成日時 : {{ $post->created_at }}</p>
-    <div style="display:flex;">
-    <a style="margin-right:15px;"class="btn btn-primary btn-lg" href="/posts/show/{{ $post->id }}" role="button">詳細</a>
-      @if (Auth::id() == $post->user->id)
-        <a style="margin-right:15px;"class="btn btn-primary btn-lg" href="/posts/edit/{{ $post->id }}" role="button">編集</a>
-        <form action="/posts/destroy/{{ $post->id }}" method="post">
-          @csrf
-          <input type="hidden" name="_method" value="DELETE">
-          <input type="submit" class="btn btn-primary btn-lg" role="button" value="削除">
-        </form>
-      @endif
-    </div>
+    <hr class="my-4">
+      <form action="/posts/comment_store/{{ $post->id }}" method="post">
+      @csrf
+      <input type="hidden"  name="user_id" value="{{ Auth::id() }}">
+      <textarea name="content" placeholder="コメント内容" style="width: 100%;"></textarea>
+      <input class="btn btn-primary" type="submit" value="コメント" style="display: block;">
+    </form>
   </div>
-@endforeach
+
+  <div class="jumbotron" style="color: black; width: 90%; margin: 30px auto;">
+    <h3 class="display-5">コメント</h3>
+    <hr class="my-4">
+    @foreach ($comments as $comment)
+      <div class="media">
+        <div class="media-body">
+          <h5 class="mt-2" style="font-size: 15px;">{{ $comment->user->name }}さん</h5>
+          <p style="margin: 15px;">{{ $comment->content }}</p>
+        </div>
+        @if (Auth::id() == $comment->user_id)
+          <form action="/posts/comment_destroy/{{ $comment->id }}" method="post">
+            @csrf
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" class="btn btn-primary btn-lg" role="button" value="削除">
+          </form>
+        @endif
+      </div>
+      <hr class="my-4">
+    @endforeach
+  </div>

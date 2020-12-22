@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post; #モデルの読み込み
+use App\Models\Comment;
 use Validator; #バリデーターの利用
 
 class PostsController extends Controller
@@ -44,6 +45,12 @@ class PostsController extends Controller
         return view('posts.index',['posts'=>$posts, 'error'=>$error]);
     }
 
+    public function show ($id) {
+        $post = Post::find($id);
+        $comments = $post->comments()->get();
+        return view('posts.show', ['post'=>$post, 'comments'=>$comments]);
+    }
+
     public function edit ($id) {
         $post = Post::find($id);
         return view('posts.edit', ['post'=>$post]);
@@ -61,6 +68,23 @@ class PostsController extends Controller
 
     public function destroy ($id) {
         Post::find($id)->delete();
-        return redirect('/posts/index');
+        return back();
+    }
+
+    public function comment_store (Request $request, $id) {
+        $post = Post::find($id);
+        $comment = new Comment();
+        $params = $request->all();
+        unset($params['_token']);
+        $comment->content = $request->content;
+        $comment->user_id = $request->user_id;
+        $comment->post_id = $post->id;
+        $comment->save();
+        return back();
+    }
+
+    public function comment_destroy ($id) {
+        Comment::find($id)->delete();
+        return back();
     }
 }

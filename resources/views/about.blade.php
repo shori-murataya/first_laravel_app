@@ -61,6 +61,8 @@
               <li>モデル</li>
               <p>場所:Models</p>
               <p><a href="https://qiita.com/niisan-tokyo/items/9c799989cb535489f201">Laravel の make:model をいい感じに使いたい</a></p>
+              <p><a href="https://readouble.com/laravel/8.x/ja/eloquent-relationships.html#one-to-many">リレーションについて</a></p>
+              <p><a href="https://qiita.com/dyoshikawa/items/7b0885645730ac573263">Laravel $user->posts()->get() と $user->posts の違いを理解する</a></p>
               <li>コントローラー</li>
               <p>場所：Http/Controller.php</p>
               <p><a href="https://qiita.com/KagYeah/items/08c8159a5439f522018c">コントローラーの書き方</a></p>
@@ -72,8 +74,9 @@
               <p></p>
               <hr color="red">
               <li>ログイン機能</li>
-              <p><a href="https://selegee.com/6944/">MacでLaravel8【インストール・メール認証・日本語化】(個人メモ)</p>
-              <p></p>
+              <p><a href="https://selegee.com/6944/">MacでLaravel8【インストール・メール認証・日本語化】(個人メモ)</a></p>
+              <li>投稿機能</li>
+              <p><a href="https://qiita.com/dai_designing/items/cf6944f9cd0ac08f4e3e">Laravelで投稿アプリの機能を作成 ~CRUD編~</a></p>
               <p></p>
       </ul>
     </div>
