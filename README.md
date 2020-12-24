@@ -12,7 +12,10 @@
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## このアプリについて
-学習のため、簡易的にログイン機能、投稿機能、コメント機能を実装したアプリです。 
+学習のため、簡易的にログイン機能、投稿機能、コメント機能を実装したアプリです。  
   
 •　PHP 7.3.11 (cli)  
 •　Laravel Framework 8.19.0
+
+## このアプリの目的
+ユーザー同士で投稿に対してコメントをつけることができるシンプルなSNSです。
