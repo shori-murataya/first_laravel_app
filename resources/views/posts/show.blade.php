@@ -1,5 +1,5 @@
 @extends('layouts.common')
-@section('title', '投稿一覧')
+@section('title', '投稿詳細')
 @include('layouts.header')
 @section('main')
     <h2 style="margin:20px;">投稿詳細</h2>
@@ -12,9 +12,10 @@
         <p>作成日時 : {{ $post->created_at }}</p>
         <hr class="my-4">
         @include('layouts.errors')
-        <form action="/posts/comment_store/{{ $post->id }}" method="post">
+        <form action="/comment/store/{{ $post->id }}" method="post">
             @csrf
             <input type="hidden"  name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden"  name="post_id" value="{{ $post->id }}">
             <textarea name="content" placeholder="コメント内容" style="width: 100%;"></textarea>
             <input class="btn btn-primary" type="submit" value="コメント" style="display: block;">
         </form>
@@ -29,7 +30,7 @@
                     <p style="margin: 15px;">{{ $comment->content }}</p>
                 </div>
                 @if (Auth::id() == $comment->user_id)
-                    <form action="/posts/comment_destroy/{{ $comment->id }}" method="post">
+                    <form action="/comment/destroy/{{ $comment->id }}" method="post">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="submit" class="btn btn-primary btn-lg" role="button" value="削除">

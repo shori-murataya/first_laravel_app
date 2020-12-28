@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\Post; #モデルの読み込み
+use App\Models\Post;
 use App\Models\Comment;
 
 
@@ -62,30 +62,6 @@ class PostsController extends Controller
 
     public function destroy ($id) {
         Post::find($id)->delete();
-        return back();
-    }
-
-    public function comment_store (Request $request, $id) {
-        $post = Post::find($id);
-        $comment = new Comment();
-        $params = $request->all();
-        $rules = [
-            'user_id' => ['integer', 'required'], 
-            'post_id' => ['integer', 'required'], 
-            'content' => ['required', 'max:255'],
-        ];
-        $this->validate($request, $rules);
-        
-        unset($params['_token']);
-        $comment->content = $request->content;
-        $comment->user_id = $request->user_id;
-        $comment->post_id = $post->id;
-        $comment->save();
-        return back();
-    }
-
-    public function comment_destroy ($id) {
-        Comment::find($id)->delete();
         return back();
     }
 }

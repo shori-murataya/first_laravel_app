@@ -29,8 +29,10 @@ Route::post('/posts/store', '\App\Http\Controllers\PostsController@store');
 Route::delete('/posts/destroy/{post_id}', '\App\Http\Controllers\PostsController@destroy'); #{ post_id }はNotFoundになる
 Route::get('/posts/edit/{post_id}', '\App\Http\Controllers\PostsController@edit');
 Route::post('/posts/update/{post_id}', '\App\Http\Controllers\PostsController@update');
-Route::post('posts/comment_store/{post_id}', '\App\Http\Controllers\PostsController@comment_store' );
-Route::delete('posts/comment_destroy/{comment_id}', '\App\Http\Controllers\PostsController@comment_destroy' );
+
+Route::post('/comment/store/{post_id}', '\App\Http\Controllers\CommentController@store');
+Route::delete('/comment/destroy/{comment_id}', '\App\Http\Controllers\CommentController@destroy');
+
 
 Route::get('/users/index', '\App\Http\Controllers\UsersController@index'); #コントローラーのアクション指定
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
