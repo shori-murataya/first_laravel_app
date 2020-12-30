@@ -1,74 +1,97 @@
-# For more information: https://laravel.com/docs/sail
-version: '3'
+version: "3.8"
+
 services:
-    laravel.test:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.0
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.0/app
-        ports:
-            - '${APP_PORT:-80}:80'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on:
-            - mysql
-            - redis
-            # - selenium
-    # selenium:
-    #     image: 'selenium/standalone-chrome'
-    #     volumes:
-    #         - '/dev/shm:/dev/shm'
-    #     networks:
-    #         - sail
-    #     depends_on:
-    #         - laravel.test
-    mysql:
-        image: 'mysql:8.0'
-        ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        volumes:
-            - 'sailmysql:/var/lib/mysql'
-        networks:
-            - sail
-    redis:
-        image: 'redis:alpine'
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
-        volumes:
-            - 'sailredis:/data'
-        networks:
-            - sail
-    # memcached:
-    #     image: 'memcached:alpine'
-    #     ports:
-    #         - '11211:11211'
-    #     networks:
-    #         - sail
-    mailhog:
-        image: 'mailhog/mailhog:latest'
-        ports:
-            - 1025:1025
-            - 8025:8025
-        networks:
-            - sail
-networks:
-    sail:
-        driver: bridge
+  app:
+    build: ./docker/app
+    depends_on:
+      - db
+      - node
+      - minio
+      - kvs
+    volumes:
+      - .:/var/www
+
+  nginx:
+    build: ./docker/nginx
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    build: ./docker/db
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-local:/var/lib/mysql
+
+  node:
+    image: node:15.1.0-alpine3.10
+    tty: true
+    volumes:
+      - node-local:/app/node_modules
+    working_dir: /var/www
+
+  kvs:
+    image: redis:6.0
+    ports:
+      - "6379:6379"
+    volumes:
+      - kvs-local:/data
+
+  awscli:
+    image: amazon/aws-cli
+    volumes:
+      - .:/var/www
+    depends_on:
+      - app
+      - minio
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+    volumes:
+      - minio-local:/data
+      - minio-config:/root/.minio
+    environment:
+      MINIO_ACCESS_KEY: $AWS_ACCESS_KEY_ID
+      MINIO_SECRET_KEY: $AWS_SECRET_ACCESS_KEY
+      MINIO_DOMAIN: localhost
+    command: server /data
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add myminio $MINIO_ENDPOINT $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc mb myminio/$AWS_BUCKET;
+      /usr/bin/mc policy set public myminio/$AWS_BUCKET;
+      exit 0;
+      "
+
 volumes:
-    sailmysql:
-        driver: local
-    sailredis:
-        driver: local
+  node-local:
+    driver: 'local'
+  db-local:
+    driver: 'local'
+  kvs-local:
+    driver: 'local'
+  minio-local:
+    driver: 'local'
+  minio-config:
+    driver: 'local'

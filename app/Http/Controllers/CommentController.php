@@ -8,9 +8,9 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    public function store (Request $request) {
-        // $post = Post::find($id);
+    public function store (Request $request, $post_id) {
         $comment = new Comment();
+        $comments = Comment::where('post_id', $post_id)->orderBy('created_at', 'desc')->get();
         $params = $request->all();
         $rules = [
             'user_id' => ['integer', 'required'], 
@@ -24,7 +24,9 @@ class CommentController extends Controller
         $comment->user_id = $request->user_id;
         $comment->post_id = $request->post_id;
         $comment->save();
-        return back();
+
+        $json = ['comments' => $comments];
+        return response()->json($json);
     }
 
     public function destroy ($id) {
