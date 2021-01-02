@@ -12,10 +12,10 @@
             <p>投稿者 : {{ $post->user->name }}</p>
             <p>作成日時 : {{ $post->created_at }}</p>
             <div style="display:flex;">
-                <a style="margin-right:15px;"class="btn btn-primary btn-lg" href="/posts/show/{{ $post->id }}" role="button">詳細</a>
+                <a style="margin-right:15px;"class="btn btn-primary btn-lg" href="/posts/{{ $post->id }}" role="button">詳細</a>
                 @if (Auth::id() == $post->user->id)
-                    <a style="margin-right:15px;"class="btn btn-primary btn-lg" href="/posts/edit/{{ $post->id }}" role="button">編集</a>
-                    <form action="/posts/destroy/{{ $post->id }}" method="post">
+                    <a style="margin-right:15px;"class="btn btn-primary btn-lg" href="/posts/{{ $post->id }}/edit" role="button">編集</a>
+                    <form action="/posts/{{ $post->id }}" method="POST">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="submit" class="btn btn-primary btn-lg" role="button" value="削除">

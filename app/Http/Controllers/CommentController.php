@@ -1,36 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\Models\Post;
+
 use App\Models\Comment;
+use App\Models\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class CommentController extends Controller
 {
-    public function store (Request $request, $post_id) {
-        $comment = new Comment();
-        $comments = Comment::where('post_id', $post_id)->orderBy('created_at', 'desc')->get();
-        $params = $request->all();
-        $rules = [
-            'user_id' => ['integer', 'required'], 
-            'post_id' => ['integer', 'required'], 
-            'content' => ['required', 'max:255'],
-        ];
-        $this->validate($request, $rules);
-        
-        unset($params['_token']);
-        $comment->content = $request->content;
-        $comment->user_id = $request->user_id;
-        $comment->post_id = $request->post_id;
-        $comment->save();
-
-        $json = ['comments' => $comments];
-        return response()->json($json);
-    }
-
-    public function destroy ($id) {
-        Comment::find($id)->delete();
-        return back();
+    public function get(){
+        return response()->json(Auth::user()->comments()->get());
     }
 }

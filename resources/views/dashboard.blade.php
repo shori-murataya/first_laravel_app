@@ -6,7 +6,7 @@
         <div class="menu">
             <button type="button" class="btn btn-dark"><a href="{{ url('/users/index') }}">ユーザー一覧</a></button>
             <button type="button" class="btn btn-dark"><a href="{{ url('/posts/create') }}">投稿作成</a></button>
-            <button type="button" class="btn btn-dark"><a href="{{ url('/posts/index') }}">投稿一覧</a></button>
+            <button type="button" class="btn btn-dark"><a href="{{ url('/posts') }}">投稿一覧</a></button>
         </div>
     </x-slot>
 </x-app-layout>

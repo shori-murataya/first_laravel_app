@@ -46,5 +46,11 @@
         <p>・<a href="https://selegee.com/6944/">MacでLaravel8【インストール・メール認証・日本語化】(個人メモ)</a></p>
         <h2>投稿機能</h2>
         <p>・<a href="https://qiita.com/dai_designing/items/cf6944f9cd0ac08f4e3e">Laravelで投稿アプリの機能を作成 ~CRUD編~</a></p>
+        <hr color="red">
+        <h2>Docker</h2>
+        <p>・<a href="https://qiita.com/isaatsu0131/items/50f8dca389b60a1fd5b5">「Connection refused」エラー</a></p>
+        <hr color="red">
+        <h2>その他</h2>
+        <p>・<a href="https://qiita.com/ntm718/items/fed0e1060557a4e28ef3">Laravel で JavaScriptをやるときの手法</a></p>
     </div>
 @endsection

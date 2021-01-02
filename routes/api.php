@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+#Route::group(["middleware" => "auth.api"],function(){
+    Route::get('/comment','\App\Http\Controllers\CommentController@get');
+    Route::post('/comment/{post_id}','\App\Http\Controllers\CommentController@post');
+#});
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

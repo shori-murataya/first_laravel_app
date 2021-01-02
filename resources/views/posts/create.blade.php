@@ -5,7 +5,7 @@
     <div style="width:50%; min-width: 470px; margin: 0 auto;">
         <h2 style="margin: 50px 0;">新規投稿</h2>
         @include('layouts.errors')
-        <form action="/posts/store" method="post">
+        <form action="/posts" method="post">
             <div class="form-group">
                 @csrf
                 <input type="hidden" name="user_id" value="{{ Auth::id() }}">

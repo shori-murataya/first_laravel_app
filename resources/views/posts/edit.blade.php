@@ -5,10 +5,10 @@
     <div style="width:50%; min-width: 470px; margin: 0 auto;">
         <h2 style="margin: 50px 0;">投稿編集</h2>
         @include('layouts.errors')
-        <form action="/posts/update/{{ $post->id }}" method="post">
+        <form action="/posts/{{ $post->id }}" method="POST">
             <div class="form-group">
                 @csrf
-                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                <input type="hidden" name="_method" value="PUT">
                 <label for="exampleInput">タイトル</label>
                 <input type="text" name="title" class="form-control" id="exampleInput" value="{{ $post->title }}"placeholder="タイトル(最大20文字)">
             </div>
